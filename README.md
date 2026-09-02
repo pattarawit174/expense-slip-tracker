@@ -9,7 +9,7 @@
 ```
 .
 ├── n8n/
-│   └── workflow.json        # n8n workflow export (credential/webhook ID ถูกเบลอแล้ว)
+│   └── workflow.json        # n8n workflow export (n8n Version 2.12.3)
 └── database/
     ├── create_table_public_users.sql
     ├── create_table_public_expenses.sql
