@@ -1,0 +1,1769 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "expenses",
+        "limit": 1,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_user_id",
+              "condition": "eq",
+              "keyValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+            },
+            {
+              "keyName": "invoice_date",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor6').item.json.output.invoice_date }}"
+            },
+            {
+              "keyName": "total_amount",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor6').item.json.output.total_amount }}"
+            },
+            {
+              "keyName": "activity",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor6').item.json.output.activity \n\n '-' }}"
+            }
+          ]
+        }
+      },
+      "id": "5aa002ca-d8a2-41f3-9ec0-df8c552f9d56",
+      "name": "Check Duplicate (Image)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10384,
+        560
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('Information Extractor6').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    isDuplicate,\n    replyText: text\n  }\n};"
+      },
+      "id": "bb1226bf-d8d9-4a66-8c29-7fa28b99e773",
+      "name": "Build Reply (Image)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10608,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "u1-isdup-Image",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "92753a41-7ca8-4e4a-a8fe-688a1badc3fc",
+      "name": "Is Duplicate? (Image)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        10768,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "expenses",
+        "limit": 1,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_user_id",
+              "condition": "eq",
+              "keyValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+            },
+            {
+              "keyName": "invoice_date",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor7').item.json.output.invoice_date || $now.toFormat('yyyy-MM-dd') }}"
+            },
+            {
+              "keyName": "total_amount",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor7').item.json.output.total_amount }}"
+            },
+            {
+              "keyName": "activity",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor7').item.json.output.activity \n\n '-' }}"
+            }
+          ]
+        }
+      },
+      "id": "0d1045f0-f3bc-4924-885e-166b186c1d60",
+      "name": "Check Duplicate (Text)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10304,
+        1184
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('Information Extractor7').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);  // เพิ่มบรรทัดนี้\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    isDuplicate,\n    replyText: text\n  }\n};"
+      },
+      "id": "ea64c8ea-9902-4de4-99a8-18883d453218",
+      "name": "Build Reply (Text)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10496,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "u1-isdup-Text",
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9b3593a7-e251-4572-b2e5-6696ee0804b9",
+      "name": "Is Duplicate? (Text)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        10704,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "REDACTED_WEBHOOK_ID_1",
+        "options": {}
+      },
+      "id": "3df8feaf-483f-4f6e-8cb2-7b78b0288d50",
+      "name": "LINE Webhook4",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        8208,
+        256
+      ],
+      "webhookId": "REDACTED_WEBHOOK_ID_1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api-data.line.me/v2/bot/message/{{ $json.body.events[0].message.id }}/content",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "60fc39ff-beb9-4eb6-b21b-d6296d79daed",
+      "name": "Get Line File5",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        9056,
+        240
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.content.parts[0].text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "payer_name",
+              "description": "The name of the recipient or merchant issuing the invoice, usually found after the 'From' label. It's usually the first name listed, following the bank's name."
+            },
+            {
+              "name": "Recipient_name",
+              "description": "The name of the recipient (or transferee) to whom the invoice is issued, typically following the word 'To'. It's usually the second name listed, following the bank's name."
+            },
+            {
+              "name": "invoice_date",
+              "type": "date",
+              "description": "The invoice (or receipt) date in YYYY-MM-DD format, typically following the phrase 'Transaction Date'."
+            },
+            {
+              "name": "total_amount",
+              "description": "Total net amount: Numbers only. No currency symbols or commas. Usually follows 'Amount'."
+            },
+            {
+              "name": "activity",
+              "description": "The specific event, occasion, trip, project, or context associated with the transaction (e.g., งานแต่ง, ทริปญี่ปุ่น, ปาร์ตี้ปีใหม่, เลี้ยงสายรหัส). If no specific event is mentioned, return null. It is usually placed after the word \"บันทึก\" or \"บันทึกช่วยจำ\""
+            },
+            {
+              "name": "transaction_type",
+              "description": "ระบุประเภทธุรกรรมเป็นค่าใดค่าหนึ่งเท่านั้น: 'income' หรือ 'expense'. ใช้ 'income' (รายรับ) เมื่อผู้ใช้เป็นฝ่ายได้รับเงิน เช่น เงินเดือน, ได้รับโอนเงิน, ขายของได้เงิน, คนอื่นจ่ายคืน. ใช้ 'expense' (รายจ่าย) เมื่อผู้ใช้เป็นฝ่ายจ่ายเงิน เช่น ซื้อของ, จ่ายบิล, โอนเงินออก, ค่าใช้จ่ายทั่วไป. ถ้าไม่ชัดเจนว่าเป็นแบบไหน ให้ใช้ 'expense' เป็นค่าเริ่มต้น.",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        9792,
+        240
+      ],
+      "id": "5ea2f73c-da92-401a-a757-ac694c673ac9",
+      "name": "Information Extractor6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook4').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        11008,
+        240
+      ],
+      "id": "b06daf65-074d-40e3-8053-18b1c90a77c2",
+      "name": "HTTP Request16",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4f8288b7-ac97-4676-a3a3-13563d21e9b7",
+              "leftValue": "={{ $json.body.events[0].message.type }}",
+              "rightValue": "=image",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "1d366fc6-fa45-4798-89bc-57ac6e29c381",
+              "leftValue": "={{ $json.body.events[0].message.type }}",
+              "rightValue": "file",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        8496,
+        256
+      ],
+      "id": "76a2502f-d229-4f75-8f7d-3b9f56755c80",
+      "name": "If13"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8b032962-d9ea-410f-88f0-8085d5c35d4a",
+              "leftValue": "={{ $json.output.intent }}",
+              "rightValue": "view_summary",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        9312,
+        1344
+      ],
+      "id": "9478da0e-8eba-4d60-bab4-f799222b2d3c",
+      "name": "If14"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        10464,
+        1792
+      ],
+      "id": "d27c2945-f04f-4df4-b9bb-be4106c2237c",
+      "name": "Embeddings Google Gemini4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents2",
+          "mode": "list",
+          "cachedResultName": "documents2"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        10352,
+        240
+      ],
+      "id": "cf4a0c3f-743c-43dd-b42d-958d448bc344",
+      "name": "Supabase Vector Store6",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.pageContent }}\ntimestamp : {{ $json.metadata.timestamp }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        10496,
+        432
+      ],
+      "id": "77f0e44d-3d04-4015-b73b-e05567ca33e8",
+      "name": "Default Data Loader6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.item.json.output;\nif (!data) { return { json: { pageContent: \"No data extracted\", metadata: {} } }; }\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nconst contentString = `ข้อมูลใบเสร็จ (${typeLabel}):\nผู้ชำระเงิน: ${data.payer_name || '-'}\nผู้รับเงิน: ${data.Recipient_name || '-'}\nวันที่: ${data.invoice_date || '-'}\nยอดรวมสุทธิ: ${data.total_amount || '-'} บาท`;\nreturn { json: { pageContent: contentString, metadata: { source: \"receipt_analysis\", timestamp: new Date().toISOString() } } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10144,
+        240
+      ],
+      "id": "c0126e51-bd36-4c9f-97c6-f11a64064c26",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a financial expert dedicated to providing consultation and advice to users from {{ $json.output.text }}. Please reply in Thai."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        9504,
+        1824
+      ],
+      "id": "e2b9dab0-1e3c-492c-922f-01d7023e083d",
+      "name": "Message a model5",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook4').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.content.parts[0].text\n    }\n  ]\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        9840,
+        1824
+      ],
+      "id": "4ad33eb4-b05d-4437-94a1-67c983c92eb9",
+      "name": "HTTP Request17",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer the question:\n{{ $('LINE Webhook4').item.json.body.events[0].message.text }}\nIf the question is about past expenses, use the 'Supabase Vecter Search' tool.\nnow : {{ $now }}.\n\nreplyToken: {{ $('LINE Webhook4').item.json.body.events[0].replyToken }}\n\nOutput as:\n{\n  \"reply\": \"xxx\",\n  \"replyToken\": \"xxx\"\n}\n\nPlease reply in Thai.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        9664,
+        1328
+      ],
+      "id": "1cff2516-522c-4c25-8984-b852e17b4d37",
+      "name": "AI Agent5"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-pro-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9552,
+        1552
+      ],
+      "id": "2d7a70c2-3cc0-4416-a907-abce8d21e32d",
+      "name": "Google Gemini Chat Model11",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"reply\": \"xxx\",\n  \"replyToken\": \"xxx\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        10096,
+        1552
+      ],
+      "id": "21bc90ba-e4b0-4435-833e-81535bd2ebed",
+      "name": "Structured Output Parser6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook4').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.output.reply\n    }\n  ]\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        10096,
+        1328
+      ],
+      "id": "c0078abe-1e0f-46ab-be87-aa3c8f0d0360",
+      "name": "HTTP Request18",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "work with data in vecter db.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents2",
+          "mode": "list",
+          "cachedResultName": "documents2"
+        },
+        "topK": 10,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        9792,
+        1552
+      ],
+      "id": "3eb2ac1d-a3e6-4d50-b14e-17b8bb2989f1",
+      "name": "Supabase Vecter Search4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-lite-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9792,
+        464
+      ],
+      "id": "d8b67e55-3566-42d4-b990-16ef2dd8257e",
+      "name": "Google Gemini Chat Model18",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Role: Financial AI Classifier. Classify input into exactly ONE intent. Output ONLY valid JSON. \"data\" represents the core message the user wants to convey.\n\nIntents:\n1. record_expense: Log new expenses. Input contains item+amount, an image (slip/receipt), or complaints about spending.\n2. view_summary: Retrieve past/current spending totals. Contains timeframes (today, last month). Lacks specific monetary amounts.\n3. financial_advice: Ask for financial tips, investment, debt management, or savings advice.(It's often a question.)\n4. general_chat: Catch-all for greetings, small talk, insults, or non-financial topics.\n\nFormat: {\"intent\": \"intent_name\", \"data\": \"core info or null\", \"text\": {{ $json.body.events[0].message.text }}}\n\nExamples:\nU: \"Coffee 65\"\nA: {\"intent\": \"record_expense\", \"data\": \"Coffee 65\"}\n\nU: \"Electricity 1200, water 200\"\nA: {\"intent\": \"record_expense\", \"data\": \"Electricity 1200, water 200\"}\n\nU: [Image]\nA: {\"intent\": \"record_expense\", \"data\": \"image_slip\"}\n\nU: \"Summary for Feb\"\nA: {\"intent\": \"view_summary\", \"data\": \"Feb\"}\n\nU: \"How much did I spend yesterday?\"\nA: {\"intent\": \"view_summary\", \"data\": \"Yesterday\"}\n\nU: \"Manage 15k salary?\"\nA: {\"intent\": \"financial_advice\", \"data\": \"Manage 15k salary\"}\n\nU: \"I have credit card debt, help\"\nA: {\"intent\": \"financial_advice\", \"data\": \"Clear credit card debt\"}\n\nU: \"Hello admin\"\nA: {\"intent\": \"general_chat\", \"data\": \"Greeting\"} ",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        8784,
+        624
+      ],
+      "id": "d76737de-5f6a-4f30-b7b7-6a9117880053",
+      "name": "AI Agent8",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-lite-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        8768,
+        864
+      ],
+      "id": "fb4e3df4-6669-482c-94de-c56bb3df2195",
+      "name": "Google Gemini Chat Model19",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"intent\": \"ชื่อ_intent\",\n  \"extracted_data\": \"ข้อมูลที่ดึงมาได้ หรือ null\",\n  \"text\": \"ข้อความจาก text\"\n}",
+        "autoFix": "="
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        8928,
+        864
+      ],
+      "id": "8782b299-e18b-4381-ad00-91abb05b037d",
+      "name": "Structured Output Parser9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b77175a0-cac5-4056-baec-36d9e40c52d2",
+              "leftValue": "={{ $json.output.intent }}",
+              "rightValue": "=record_expense",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        9280,
+        864
+      ],
+      "id": "b06161eb-0f40-4147-bb61-d1af1715bec8",
+      "name": "If15"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "543c8aa4-be75-425a-9a97-0f4cfa99dd34",
+              "leftValue": "={{ $json.output.intent }}",
+              "rightValue": "general_chat",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "e1cacff0-e6c4-4b55-b1b3-6f1423062a63",
+              "leftValue": "={{ $json.output.intent }}",
+              "rightValue": "financial_advice",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        9312,
+        1840
+      ],
+      "id": "1ebe2f9c-a976-4932-bd5b-675ee8b73279",
+      "name": "If16"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output.text }} ",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "payer_name",
+              "description": "The name of the recipient or merchant issuing the invoice, usually found after the 'From' label."
+            },
+            {
+              "name": "Recipient_name",
+              "description": "The name of the recipient (or transferee) to whom the invoice is issued, typically following the word 'To'."
+            },
+            {
+              "name": "invoice_date",
+              "type": "date",
+              "description": "The invoice (or receipt) date in YYYY-MM-DD format, typically following the phrase 'Transaction Date'."
+            },
+            {
+              "name": "total_amount",
+              "description": "Total net amount: Numbers only. No currency symbols or commas. Usually follows 'Amount'.",
+              "required": true
+            },
+            {
+              "name": "activity",
+              "description": "The specific event, Ordinary events, occasion, trip, project, or context associated with the transaction (e.g., งานแต่ง, ทริปญี่ปุ่น, ปาร์ตี้ปีใหม่, เลี้ยงสายรหัส, กิจกรรมรายจ่ายต่างๆ). If no specific event is mentioned, return null.",
+              "required": true
+            },
+            {
+              "name": "transaction_type",
+              "description": "ระบุประเภทธุรกรรมเป็นค่าใดค่าหนึ่งเท่านั้น: 'income' หรือ 'expense'. ใช้ 'income' (รายรับ) เมื่อผู้ใช้เป็นฝ่ายได้รับเงิน เช่น เงินเดือน, ได้รับโอนเงิน, ขายของได้เงิน, คนอื่นจ่ายคืน. ใช้ 'expense' (รายจ่าย) เมื่อผู้ใช้เป็นฝ่ายจ่ายเงิน เช่น ซื้อของ, จ่ายบิล, โอนเงินออก, ค่าใช้จ่ายทั่วไป. ถ้าไม่ชัดเจนว่าเป็นแบบไหน ให้ใช้ 'expense' เป็นค่าเริ่มต้น.",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        9552,
+        848
+      ],
+      "id": "ade3d4f6-b288-4c2d-83e0-dd34e00f3fee",
+      "name": "Information Extractor7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook4').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        10816,
+        784
+      ],
+      "id": "03e530da-9f08-4f1f-b419-455f1bf3efee",
+      "name": "HTTP Request19",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents2",
+          "mode": "list",
+          "cachedResultName": "documents2"
+        },
+        "embeddingBatchSize": 5000,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        10272,
+        768
+      ],
+      "id": "be43c5a0-1a51-480b-ab51-a5f36198cb6a",
+      "name": "Supabase Vector Store7",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      },
+      "notes": "Always Output Data"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.pageContent }}\ntimestamp : {{ $json.metadata.timestamp }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        10448,
+        976
+      ],
+      "id": "d44a9177-d65c-4595-aac8-653b4ea1dc94",
+      "name": "Default Data Loader7"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.item.json.output;\nif (!data) { return { json: { pageContent: \"No data extracted\", metadata: {} } }; }\nconst typeLabel = $input.first().json.output.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nconst contentString = `ข้อมูลใบเสร็จ (${typeLabel}):\nผู้ชำระเงิน: ${$input.first().json.output.payer_name || '-'}\nผู้รับเงิน: ${$input.first().json.output.Recipient_name || '-'}\nวันที่: ${$input.first().json.output.invoice_date || '-'}\nยอดรวมสุทธิ: ${$input.first().json.output.total_amount || '-'} บาท\nกิจกรรม: ${$input.first().json.output.activity || '-'} `;\n  return { json: { pageContent: contentString, metadata: { source: \"receipt_analysis\", timestamp: new Date().toISOString() } } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        10064,
+        768
+      ],
+      "id": "6d8fa090-6b84-4afb-9a98-1e932501149c",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9552,
+        1088
+      ],
+      "id": "2f36e106-c096-460f-860b-d4c2e6e74c07",
+      "name": "Google Gemini Chat Model20",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "text": "Role: Expert OCR System. Your task is to extract ALL visible text from the provided image exactly as it appears.\nRules:\n1. Extract text exactly as written. Preserve original spelling, numbers, and punctuation.\n2. Maintain the original line breaks and layout as much as possible.\n3. DO NOT hallucinate, summarize, or guess missing information.\n4. DO NOT include any conversational filler (e.g., \"Here is the text\"). Output ONLY the extracted text.\n5. If the image contains no readable text, output strictly \"UNREADABLE\". (Please answer in Thai.)",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        9536,
+        240
+      ],
+      "id": "a60cbf4d-8ca2-4dfc-9342-a961bb4faaee",
+      "name": "Analyze an image5",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || 'dm' }}_{{ $('LINE Webhook4').item.json.body.events[0].source.userId }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        9680,
+        1552
+      ],
+      "id": "4c6f6482-267d-407d-9419-5b48fc23cb01",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const event = $json.body.events[0];\nconst source = event.source || {};\nreturn {\n  json: {\n    lineUserId: source.userId || null,\n    groupId: source.groupId || null,\n    roomId: source.roomId || null,\n    chatType: source.type || 'user'\n  }\n};"
+      },
+      "id": "043b2c06-4095-4c9c-ba6d-452a8b90cfd6",
+      "name": "Extract User Info2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8208,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "u1-is-group",
+              "leftValue": "={{ $json.groupId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3f4fb9c3-27d7-4a35-942a-5f4ca7fa3b41",
+      "name": "Check Group2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        8384,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.line.me/v2/bot/group/{{ $json.groupId }}/member/{{ $json.lineUserId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "4d7c7fd0-90dc-4c13-8f83-29263bf87853",
+      "name": "Get Group Member Profile2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8560,
+        464
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.line.me/v2/bot/profile/{{ $json.lineUserId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "64ad44af-a68a-4eb0-b089-a51b4f704f1d",
+      "name": "Get User Profile2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8560,
+        672
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "users",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "line_user_id",
+              "fieldValue": "={{ $('Extract User Info2').item.json.lineUserId }}"
+            },
+            {
+              "fieldId": "display_name",
+              "fieldValue": "={{ $json.displayName }}"
+            },
+            {
+              "fieldId": "group_id",
+              "fieldValue": "={{ $('Extract User Info2').item.json.groupId }}"
+            }
+          ]
+        }
+      },
+      "id": "3610176f-efb0-4d3a-a27e-5ccca286cfa0",
+      "name": "Upsert User2",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        8784,
+        400
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "expenses",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "line_user_id",
+              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+            },
+            {
+              "fieldId": "group_id",
+              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || null }}"
+            },
+            {
+              "fieldId": "payer_name",
+              "fieldValue": "={{ $json.payer_name }}"
+            },
+            {
+              "fieldId": "recipient_name",
+              "fieldValue": "={{ $json.Recipient_name }}"
+            },
+            {
+              "fieldId": "invoice_date",
+              "fieldValue": "={{ $json.invoice_date }}"
+            },
+            {
+              "fieldId": "total_amount",
+              "fieldValue": "={{ $json.total_amount }}"
+            },
+            {
+              "fieldId": "activity",
+              "fieldValue": "={{ $json.activity }}"
+            },
+            {
+              "fieldId": "transaction_type",
+              "fieldValue": "={{ $json.transaction_type }}"
+            }
+          ]
+        }
+      },
+      "id": "41887367-bd87-48f5-bf38-37a95db5d1ab",
+      "name": "Insert Expense Record (Image)2",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10960,
+        560
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "expenses",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "line_user_id",
+              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+            },
+            {
+              "fieldId": "group_id",
+              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || null }}"
+            },
+            {
+              "fieldId": "payer_name",
+              "fieldValue": "={{ $json.payer_name }}"
+            },
+            {
+              "fieldId": "recipient_name",
+              "fieldValue": "={{ $json.Recipient_name }}"
+            },
+            {
+              "fieldId": "invoice_date",
+              "fieldValue": "={{ $json.invoice_date }}"
+            },
+            {
+              "fieldId": "total_amount",
+              "fieldValue": "={{ $json.total_amount }}"
+            },
+            {
+              "fieldId": "activity",
+              "fieldValue": "={{ $json.activity }}"
+            },
+            {
+              "fieldId": "transaction_type",
+              "fieldValue": "={{ $json.transaction_type }}"
+            }
+          ]
+        }
+      },
+      "id": "1d400f37-a5f5-41a0-91cb-2c1625092202",
+      "name": "Insert Expense Record (Text)2",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        10928,
+        1184
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "expense-dashboard",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "7df93276-f780-4ff7-b6a6-ea462305f725",
+      "name": "Dashboard Webhook2",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        8192,
+        1152
+      ],
+      "webhookId": "REDACTED_WEBHOOK_ID_2"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "monthly_summary",
+        "returnAll": true,
+        "filterType": "none"
+      },
+      "id": "60200fa3-0343-4b35-b4a9-d5bef9dee009",
+      "name": "Get Monthly Data2",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        8368,
+        1152
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "7a55dcea-8cc1-4335-89a0-f9ef8e78dec2",
+      "name": "Respond Dashboard2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        8736,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const query = $('Dashboard Webhook2').first().json.query || {};\nlet rows = $input.all().map(i => i.json).filter(r => r && r.month);\n\nif (query.line_user_id) {\n  rows = rows.filter(r => r.line_user_id === query.line_user_id);\n} else if (query.group_id) {\n  rows = rows.filter(r => r.group_id === query.group_id);\n}\n\nconst rowsHtml = rows.map(r => `<tr><td>${r.month}</td><td>${r.display_name || r.line_user_id}</td>\n<td style=\"text-align:right;color:#0a7d2c\">${Number(r.income||0).toLocaleString()}</td>\n<td style=\"text-align:right;color:#c0392b\">${Number(r.expense||0).toLocaleString()}</td>\n<td style=\"text-align:right;font-weight:bold\">${Number(r.net||0).toLocaleString()}</td></tr>`).join('');\n\nconst html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\">\n<title>สรุปรายรับ-รายจ่ายรายเดือน</title>\n<style>body{font-family:sans-serif;padding:24px;background:#f7f7f8}\ntable{border-collapse:collapse;width:100%;background:#fff}\nth,td{padding:8px 12px;border-bottom:1px solid #eee}\nth{background:#111;color:#fff;text-align:left}</style></head><body>\n<h2>สรุปรายรับ-รายจ่ายรายเดือน</h2>\n<table><thead><tr><th>เดือน</th><th>ผู้ใช้</th><th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือสุทธิ</th></tr></thead>\n<tbody>${rowsHtml || '<tr><td colspan=5>ไม่มีข้อมูล</td></tr>'}</tbody></table>\n</body></html>`;\n\nreturn { json: { html } };"
+      },
+      "id": "fecb4fc8-a6f8-4ee7-a6eb-48d82a883dca",
+      "name": "Build Dashboard HTML2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8544,
+        1152
+      ]
+    }
+  ],
+  "connections": {
+    "Check Duplicate (Image)": {
+      "main": [
+        [
+          {
+            "node": "Build Reply (Image)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reply (Image)": {
+      "main": [
+        [
+          {
+            "node": "Is Duplicate? (Image)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Duplicate? (Image)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request16",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request16",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insert Expense Record (Image)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate (Text)": {
+      "main": [
+        [
+          {
+            "node": "Build Reply (Text)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Reply (Text)": {
+      "main": [
+        [
+          {
+            "node": "Is Duplicate? (Text)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Duplicate? (Text)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request19",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request19",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insert Expense Record (Text)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LINE Webhook4": {
+      "main": [
+        [
+          {
+            "node": "If13",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract User Info2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Line File5": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor6": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Duplicate (Image)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If13": {
+      "main": [
+        [
+          {
+            "node": "Get Line File5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If14": {
+      "main": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini4": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store6",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Vecter Search4",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Vector Store7",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader6": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store6",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request18",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model11": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser6": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vecter Search4": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model18": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor6",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent8": {
+      "main": [
+        [
+          {
+            "node": "If14",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If15",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model19": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent8",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser9": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent8",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If15": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If16": {
+      "main": [
+        [
+          {
+            "node": "Message a model5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor7": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Duplicate (Text)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader7": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store7",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model20": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor7",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image5": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent5",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract User Info2": {
+      "main": [
+        [
+          {
+            "node": "Check Group2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Group2": {
+      "main": [
+        [
+          {
+            "node": "Get Group Member Profile2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get User Profile2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Group Member Profile2": {
+      "main": [
+        [
+          {
+            "node": "Upsert User2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Profile2": {
+      "main": [
+        [
+          {
+            "node": "Upsert User2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Webhook2": {
+      "main": [
+        [
+          {
+            "node": "Get Monthly Data2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Monthly Data2": {
+      "main": [
+        [
+          {
+            "node": "Build Dashboard HTML2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dashboard HTML2": {
+      "main": [
+        [
+          {
+            "node": "Respond Dashboard2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REDACTED_INSTANCE_ID"
+  }
+}
