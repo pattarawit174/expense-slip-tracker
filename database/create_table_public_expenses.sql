@@ -9,7 +9,10 @@ create table public.expenses (
   activity text null,
   created_at timestamp with time zone null default now(),
   transaction_type text null default 'expense'::text,
+  reference_code text null,
   constraint expenses_pkey primary key (id)
 ) TABLESPACE pg_default;
+
+create index IF not exists idx_expenses_user_refcode on public.expenses using btree (line_user_id, reference_code) TABLESPACE pg_default;
 
 create index IF not exists idx_expenses_user_month on public.expenses using btree (line_user_id, month_start (invoice_date)) TABLESPACE pg_default;
