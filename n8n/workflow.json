@@ -89,8 +89,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -143,7 +143,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "0ac2c280-aaf9-4b2b-b124-2913a867f5f2",
+        "path": "REDACTED-WEBHOOK-PATH-UUID",
         "options": {}
       },
       "id": "3f2a0c14-aa68-44df-aad3-7afa68164594",
@@ -154,7 +154,7 @@
         14288,
         896
       ],
-      "webhookId": "0ac2c280-aaf9-4b2b-b124-2913a867f5f2"
+      "webhookId": "REDACTED_WEBHOOK_ID"
     },
     {
       "parameters": {
@@ -183,8 +183,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -257,8 +257,8 @@
       "name": "HTTP Request20",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -351,8 +351,8 @@
       "name": "Embeddings Google Gemini5",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -378,8 +378,8 @@
       "notesInFlow": true,
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -439,8 +439,8 @@
       "name": "Message a model6",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -465,8 +465,8 @@
       "name": "HTTP Request21",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -501,8 +501,8 @@
       "name": "Google Gemini Chat Model21",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -540,8 +540,8 @@
       "name": "HTTP Request22",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -568,8 +568,8 @@
       "name": "Supabase Vecter Search5",
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -588,8 +588,8 @@
       "name": "Google Gemini Chat Model22",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -625,8 +625,8 @@
       "name": "Google Gemini Chat Model23",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -786,8 +786,8 @@
       "name": "HTTP Request23",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -814,8 +814,8 @@
       "notesInFlow": true,
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       },
       "notes": "Always Output Data"
@@ -864,8 +864,8 @@
       "alwaysOutputData": false,
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -893,8 +893,8 @@
       "name": "Analyze an image6",
       "credentials": {
         "googlePalmApi": {
-          "id": "mzHmkrA7zZeIYfT6",
-          "name": "Google Gemini(PaLM) Api account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -976,8 +976,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -998,8 +998,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -1033,8 +1033,8 @@
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       },
       "onError": "continueRegularOutput"
@@ -1093,8 +1093,8 @@
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -1148,8 +1148,8 @@
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -1167,7 +1167,7 @@
         14224,
         528
       ],
-      "webhookId": "d3c1b8a2-1111-4b2b-9999-2913a867f5f2"
+      "webhookId": "REDACTED_WEBHOOK_ID"
     },
     {
       "parameters": {
@@ -1187,8 +1187,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
@@ -1253,7 +1253,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const SECRET = \"2569xyz\"; // ตั้งเองแล้วใช้ค่าเดียวกันทั้ง 2 จุด\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst userId = $('LINE Webhook5').item.json.body.events[0].source.userId;\nconst token = makeToken(userId, SECRET);\nconst link = `https://regainable-laurinda-unpromising.ngrok-free.dev/webhook/expense-dashboard?token=${token}`;\n\nreturn {\n  json: {\n    replyText: `นี่คือลิงก์ dashboard ส่วนตัวของคุณ (เห็นข้อมูลของคุณเท่านั้น):\\n${link}`\n  }\n};"
+        "jsCode": "const SECRET = \"REDACTED_SECRET\"; // ตั้งเองแล้วใช้ค่าเดียวกันทั้ง 2 จุด\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst userId = $('LINE Webhook5').item.json.body.events[0].source.userId;\nconst token = makeToken(userId, SECRET);\nconst link = `https://REDACTED-NGROK-URL.ngrok-free.dev/webhook/expense-dashboard?token=${token}`;\n\nreturn {\n  json: {\n    replyText: `นี่คือลิงก์ dashboard ส่วนตัวของคุณ (เห็นข้อมูลของคุณเท่านั้น):\\n${link}`\n  }\n};"
       },
       "id": "098a2723-556c-416b-ab67-1f30ec1ee7f0",
       "name": "Generate Dashboard Link",
@@ -1285,14 +1285,14 @@
       "name": "HTTP Request4",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "H2N9YHhoZvl5rflC",
-          "name": "Header Auth account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const SECRET = \"2569xyz\"; // ต้องเหมือนด้านบนเป๊ะ\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst query = $('Dashboard Webhook3').item.json.query || {};\nconst token = query.token;\n\nlet rows = $input.all().map(i => i.json).filter(r => r && r.month);\n\nif (!token) {\n  return { json: { html: '<h2>ไม่พบ token กรุณาพิมพ์ \"dashboard\" คุยกับบอทเพื่อขอลิงก์ใหม่</h2>' } };\n}\n\nrows = rows.filter(r => makeToken(r.line_user_id, SECRET) === token);\n\n// เรียงเดือนล่าสุดไว้บนสุดใน Dropdown\nrows.sort((a, b) => String(b.month).localeCompare(String(a.month)));\n\nif (rows.length === 0) {\n  return { json: { html: '<h2>ไม่มีข้อมูล</h2>' } };\n}\n\nconst displayName = rows[0].display_name || rows[0].line_user_id;\n\nconst optionsHtml = rows.map((r, i) =>\n  `<option value=\"${i}\">${r.month}</option>`\n).join('');\n\nconst monthlyDataJs = rows.map(r => ({\n  month: r.month,\n  income: Number(r.income || 0),\n  expense: Number(r.expense || 0),\n  net: Number(r.net || 0)\n}));\n\nconst html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>สรุปรายรับ-รายจ่ายรายเดือน</title>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js\"></script>\n<style>\nbody{font-family:sans-serif;padding:24px;background:#f7f7f8}\n.card{background:#fff;border-radius:8px;padding:20px;max-width:640px;margin:0 auto 16px;box-shadow:0 1px 4px rgba(0,0,0,0.1)}\nh2{margin-top:0}\nselect{width:100%;padding:10px;font-size:16px;border-radius:6px;border:1px solid #ddd;margin-bottom:16px}\n.summary-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:15px}\n.income{color:#0a7d2c;font-weight:bold}\n.expense{color:#c0392b;font-weight:bold}\n.net{font-weight:bold}\n</style></head><body>\n\n<div class=\"card\">\n  <h2>สรุปรายรับ-รายจ่ายรายเดือน (ส่วนตัว)</h2>\n  <div style=\"color:#666;margin-bottom:12px\">ผู้ใช้: ${displayName}</div>\n  <select id=\"monthSelect\">${optionsHtml}</select>\n  <div class=\"summary-row\"><span>รายรับ</span><span class=\"income\" id=\"incomeVal\"></span></div>\n  <div class=\"summary-row\"><span>รายจ่าย</span><span class=\"expense\" id=\"expenseVal\"></span></div>\n  <div class=\"summary-row\"><span>คงเหลือสุทธิ</span><span class=\"net\" id=\"netVal\"></span></div>\n  <canvas id=\"summaryChart\" height=\"180\"></canvas>\n</div>\n\n<script>\nconst monthlyData = ${JSON.stringify(monthlyDataJs)};\nlet chart;\n\nfunction render(idx) {\n  const d = monthlyData[idx];\n  document.getElementById('incomeVal').textContent = d.income.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('expenseVal').textContent = d.expense.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('netVal').textContent = d.net.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n\n  if (chart) chart.destroy();\n  chart = new Chart(document.getElementById('summaryChart'), {\n    type: 'bar',\n    data: {\n      labels: ['รายรับ', 'รายจ่าย'],\n      datasets: [{ data: [d.income, d.expense], backgroundColor: ['#0a7d2c', '#c0392b'] }]\n    },\n    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }\n  });\n}\n\ndocument.getElementById('monthSelect').addEventListener('change', (e) => render(e.target.value));\nrender(0);\n</script>\n</body></html>`;\n\nreturn { json: { html } };"
+        "jsCode": "const SECRET = \"REDACTED_SECRET\"; // ต้องเหมือนด้านบนเป๊ะ\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst query = $('Dashboard Webhook3').item.json.query || {};\nconst token = query.token;\n\nlet rows = $input.all().map(i => i.json).filter(r => r && r.month);\n\nif (!token) {\n  return { json: { html: '<h2>ไม่พบ token กรุณาพิมพ์ \"dashboard\" คุยกับบอทเพื่อขอลิงก์ใหม่</h2>' } };\n}\n\nrows = rows.filter(r => makeToken(r.line_user_id, SECRET) === token);\n\n// เรียงเดือนล่าสุดไว้บนสุดใน Dropdown\nrows.sort((a, b) => String(b.month).localeCompare(String(a.month)));\n\nif (rows.length === 0) {\n  return { json: { html: '<h2>ไม่มีข้อมูล</h2>' } };\n}\n\nconst displayName = rows[0].display_name || rows[0].line_user_id;\n\nconst optionsHtml = rows.map((r, i) =>\n  `<option value=\"${i}\">${r.month}</option>`\n).join('');\n\nconst monthlyDataJs = rows.map(r => ({\n  month: r.month,\n  income: Number(r.income || 0),\n  expense: Number(r.expense || 0),\n  net: Number(r.net || 0)\n}));\n\nconst html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>สรุปรายรับ-รายจ่ายรายเดือน</title>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js\"></script>\n<style>\nbody{font-family:sans-serif;padding:24px;background:#f7f7f8}\n.card{background:#fff;border-radius:8px;padding:20px;max-width:640px;margin:0 auto 16px;box-shadow:0 1px 4px rgba(0,0,0,0.1)}\nh2{margin-top:0}\nselect{width:100%;padding:10px;font-size:16px;border-radius:6px;border:1px solid #ddd;margin-bottom:16px}\n.summary-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:15px}\n.income{color:#0a7d2c;font-weight:bold}\n.expense{color:#c0392b;font-weight:bold}\n.net{font-weight:bold}\n</style></head><body>\n\n<div class=\"card\">\n  <h2>สรุปรายรับ-รายจ่ายรายเดือน (ส่วนตัว)</h2>\n  <div style=\"color:#666;margin-bottom:12px\">ผู้ใช้: ${displayName}</div>\n  <select id=\"monthSelect\">${optionsHtml}</select>\n  <div class=\"summary-row\"><span>รายรับ</span><span class=\"income\" id=\"incomeVal\"></span></div>\n  <div class=\"summary-row\"><span>รายจ่าย</span><span class=\"expense\" id=\"expenseVal\"></span></div>\n  <div class=\"summary-row\"><span>คงเหลือสุทธิ</span><span class=\"net\" id=\"netVal\"></span></div>\n  <canvas id=\"summaryChart\" height=\"180\"></canvas>\n</div>\n\n<script>\nconst monthlyData = ${JSON.stringify(monthlyDataJs)};\nlet chart;\n\nfunction render(idx) {\n  const d = monthlyData[idx];\n  document.getElementById('incomeVal').textContent = d.income.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('expenseVal').textContent = d.expense.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('netVal').textContent = d.net.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n\n  if (chart) chart.destroy();\n  chart = new Chart(document.getElementById('summaryChart'), {\n    type: 'bar',\n    data: {\n      labels: ['รายรับ', 'รายจ่าย'],\n      datasets: [{ data: [d.income, d.expense], backgroundColor: ['#0a7d2c', '#c0392b'] }]\n    },\n    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }\n  });\n}\n\ndocument.getElementById('monthSelect').addEventListener('change', (e) => render(e.target.value));\nrender(0);\n</script>\n</body></html>`;\n\nreturn { json: { html } };"
       },
       "id": "c10b5c7b-34c9-4c49-a729-66d65371999b",
       "name": "Build Dashboard HTML5 (Dropdown + Chart)",
@@ -1335,8 +1335,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "Nyh2hOIM6TPtjs5R",
-          "name": "Supabase account"
+          "id": "REDACTED_CRED_ID",
+          "name": "REDACTED_CRED_NAME"
         }
       }
     }
@@ -1871,6 +1871,6 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "030779b12245564a0dd45bae15ed5e1095179015730e1eeee4366ed41dc42a1d"
+    "instanceId": "REDACTED_INSTANCE_ID"
   }
 }
