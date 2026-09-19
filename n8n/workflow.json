@@ -2,63 +2,17 @@
   "nodes": [
     {
       "parameters": {
-        "operation": "getAll",
-        "tableId": "expenses",
-        "limit": 1,
-        "matchType": "allFilters",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "line_user_id",
-              "condition": "eq",
-              "keyValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
-            },
-            {
-              "keyName": "invoice_date",
-              "condition": "eq",
-              "keyValue": "={{ $('Information Extractor6').item.json.output.invoice_date }}"
-            },
-            {
-              "keyName": "total_amount",
-              "condition": "eq",
-              "keyValue": "={{ $('Information Extractor6').item.json.output.total_amount }}"
-            },
-            {
-              "keyName": "activity",
-              "condition": "eq",
-              "keyValue": "={{ $('Information Extractor6').item.json.output.activity \n\n '-' }}"
-            }
-          ]
-        }
+        "jsCode": "const data = $('Information Extractor8').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    reference_code: data.reference_code,\n    isDuplicate,\n    replyText: text\n  }\n};"
       },
-      "id": "5aa002ca-d8a2-41f3-9ec0-df8c552f9d56",
-      "name": "Check Duplicate (Image)",
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        10384,
-        560
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
-          "name": "Supabase account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const data = $('Information Extractor6').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    isDuplicate,\n    replyText: text\n  }\n};"
-      },
-      "id": "bb1226bf-d8d9-4a66-8c29-7fa28b99e773",
-      "name": "Build Reply (Image)",
+      "id": "3a99270d-99b4-43d8-8bec-041b545654c4",
+      "name": "Build Reply (Image)1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10608,
-        560
-      ]
+        16640,
+        1200
+      ],
+      "alwaysOutputData": false
     },
     {
       "parameters": {
@@ -84,13 +38,13 @@
         },
         "options": {}
       },
-      "id": "92753a41-7ca8-4e4a-a8fe-688a1badc3fc",
-      "name": "Is Duplicate? (Image)",
+      "id": "9a46ed93-2a31-44b8-bebb-b4510ddf6097",
+      "name": "Is Duplicate? (Image)1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        10768,
-        560
+        16848,
+        1200
       ]
     },
     {
@@ -104,53 +58,53 @@
             {
               "keyName": "line_user_id",
               "condition": "eq",
-              "keyValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+              "keyValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.userId }}"
             },
             {
               "keyName": "invoice_date",
               "condition": "eq",
-              "keyValue": "={{ $('Information Extractor7').item.json.output.invoice_date || $now.toFormat('yyyy-MM-dd') }}"
+              "keyValue": "={{ $('Information Extractor9').item.json.output.invoice_date || $now.toFormat('yyyy-MM-dd') }}"
             },
             {
               "keyName": "total_amount",
               "condition": "eq",
-              "keyValue": "={{ $('Information Extractor7').item.json.output.total_amount }}"
+              "keyValue": "={{ $('Information Extractor9').item.json.output.total_amount }}"
             },
             {
               "keyName": "activity",
               "condition": "eq",
-              "keyValue": "={{ $('Information Extractor7').item.json.output.activity \n\n '-' }}"
+              "keyValue": "=={{ $('Information Extractor9').item.json.output.activity || '-' }}"
             }
           ]
         }
       },
-      "id": "0d1045f0-f3bc-4924-885e-166b186c1d60",
-      "name": "Check Duplicate (Text)",
+      "id": "8858b568-9215-4c4c-88b8-b76c97d0ccfb",
+      "name": "Check Duplicate (Text)1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        10304,
-        1184
+        16384,
+        1824
       ],
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const data = $('Information Extractor7').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);  // เพิ่มบรรทัดนี้\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    isDuplicate,\n    replyText: text\n  }\n};"
+        "jsCode": "const data = $('Information Extractor9').item.json.output;\nconst dupItems = $input.all().filter(i => i.json && i.json.id !== undefined);\ndata.activity = data.activity || '-';\ndata.invoice_date = data.invoice_date || new Date().toISOString().slice(0, 10);  // เพิ่มบรรทัดนี้\nconst isDuplicate = dupItems.length > 0;\nconst typeLabel = data.transaction_type === 'income' ? 'รายรับ' : 'รายจ่าย';\nlet text = `สรุปข้อมูล\\nประเภท: ${typeLabel}\\nผู้ชำระเงิน: ${data.payer_name || '-'}\\nผู้รับเงิน: ${data.Recipient_name || '-'}\\nวันที่: ${data.invoice_date || '-'}\\nจำนวนเงิน: ${data.total_amount || '-'}\\nกิจกรรม: ${data.activity || '-'}`;\nif (isDuplicate) {\n  text = `❌ รายการนี้ซ้ำกับที่เคยบันทึกไว้แล้ว (วันที่, จำนวนเงิน และกิจกรรมตรงกัน)\\nระบบจะไม่บันทึกรายการนี้ซ้ำให้ หากต้องการบันทึกจริง กรุณาเปลี่ยนจำนวนเงินหรือระบุกิจกรรมเพิ่มเติมแล้วส่งใหม่\\n\\n` + text;\n}\nreturn {\n  json: {\n    payer_name: data.payer_name,\n    Recipient_name: data.Recipient_name,\n    invoice_date: data.invoice_date,\n    total_amount: data.total_amount,\n    activity: data.activity,\n    transaction_type: data.transaction_type,\n    isDuplicate,\n    replyText: text\n  }\n};"
       },
-      "id": "ea64c8ea-9902-4de4-99a8-18883d453218",
-      "name": "Build Reply (Text)",
+      "id": "e51dd8c2-af1e-456a-9f34-8138647390d4",
+      "name": "Build Reply (Text)1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10496,
-        1184
+        16576,
+        1824
       ]
     },
     {
@@ -177,30 +131,30 @@
         },
         "options": {}
       },
-      "id": "9b3593a7-e251-4572-b2e5-6696ee0804b9",
-      "name": "Is Duplicate? (Text)",
+      "id": "1df04bf3-44af-425a-81d6-bc9739b5d65c",
+      "name": "Is Duplicate? (Text)1",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        10704,
-        1184
+        16784,
+        1824
       ]
     },
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "REDACTED_WEBHOOK_ID_1",
+        "path": "0ac2c280-aaf9-4b2b-b124-2913a867f5f2",
         "options": {}
       },
-      "id": "3df8feaf-483f-4f6e-8cb2-7b78b0288d50",
-      "name": "LINE Webhook4",
+      "id": "3f2a0c14-aa68-44df-aad3-7afa68164594",
+      "name": "LINE Webhook5",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        8208,
-        256
+        14288,
+        896
       ],
-      "webhookId": "REDACTED_WEBHOOK_ID_1"
+      "webhookId": "0ac2c280-aaf9-4b2b-b124-2913a867f5f2"
     },
     {
       "parameters": {
@@ -219,17 +173,17 @@
           }
         }
       },
-      "id": "60fc39ff-beb9-4eb6-b21b-d6296d79daed",
-      "name": "Get Line File5",
+      "id": "2551341a-46a3-4b7c-aae1-664ae441b767",
+      "name": "Get Line File6",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9056,
-        240
+        15136,
+        880
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -264,6 +218,10 @@
               "name": "transaction_type",
               "description": "ระบุประเภทธุรกรรมเป็นค่าใดค่าหนึ่งเท่านั้น: 'income' หรือ 'expense'. ใช้ 'income' (รายรับ) เมื่อผู้ใช้เป็นฝ่ายได้รับเงิน เช่น เงินเดือน, ได้รับโอนเงิน, ขายของได้เงิน, คนอื่นจ่ายคืน. ใช้ 'expense' (รายจ่าย) เมื่อผู้ใช้เป็นฝ่ายจ่ายเงิน เช่น ซื้อของ, จ่ายบิล, โอนเงินออก, ค่าใช้จ่ายทั่วไป. ถ้าไม่ชัดเจนว่าเป็นแบบไหน ให้ใช้ 'expense' เป็นค่าเริ่มต้น.",
               "required": true
+            },
+            {
+              "name": "reference_code",
+              "description": "The transaction reference number printed on the slip, usually labeled 'รหัสอ้างอิง', 'เลขที่รายการ', 'Ref no.', or 'Transaction ID'. Return the exact alphanumeric code exactly as shown, or null if not visible."
             }
           ]
         },
@@ -272,11 +230,11 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        9792,
-        240
+        15872,
+        880
       ],
-      "id": "5ea2f73c-da92-401a-a757-ac694c673ac9",
-      "name": "Information Extractor6"
+      "id": "c6977eea-811b-4adf-9bac-4ee4ec927452",
+      "name": "Information Extractor8"
     },
     {
       "parameters": {
@@ -286,20 +244,20 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook4').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
+        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook5').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        11008,
-        240
+        17088,
+        880
       ],
-      "id": "b06daf65-074d-40e3-8053-18b1c90a77c2",
-      "name": "HTTP Request16",
+      "id": "311ef023-e179-4b06-bb6d-20aac0ee6dde",
+      "name": "HTTP Request20",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -340,11 +298,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        8496,
-        256
+        14576,
+        896
       ],
-      "id": "76a2502f-d229-4f75-8f7d-3b9f56755c80",
-      "name": "If13"
+      "id": "2c404e90-b9ce-45e9-82e0-83647c379fef",
+      "name": "If17"
     },
     {
       "parameters": {
@@ -373,11 +331,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        9312,
-        1344
+        15392,
+        1984
       ],
-      "id": "9478da0e-8eba-4d60-bab4-f799222b2d3c",
-      "name": "If14"
+      "id": "c75b29c6-6f93-430e-9092-b2653cb4437c",
+      "name": "If18"
     },
     {
       "parameters": {
@@ -386,14 +344,14 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        10464,
-        1792
+        16544,
+        2432
       ],
-      "id": "d27c2945-f04f-4df4-b9bb-be4106c2237c",
-      "name": "Embeddings Google Gemini4",
+      "id": "eef95e3c-caa6-4b91-8fe6-26ef8b5a94a6",
+      "name": "Embeddings Google Gemini5",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -412,15 +370,15 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        10352,
-        240
+        16432,
+        880
       ],
-      "id": "cf4a0c3f-743c-43dd-b42d-958d448bc344",
-      "name": "Supabase Vector Store6",
+      "id": "92a592cd-974f-4879-a2c2-c545f984e27a",
+      "name": "Supabase Vector Store8",
       "notesInFlow": true,
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
@@ -434,11 +392,11 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        10496,
-        432
+        16576,
+        1072
       ],
-      "id": "77f0e44d-3d04-4015-b73b-e05567ca33e8",
-      "name": "Default Data Loader6"
+      "id": "39c56fb5-0328-4128-9935-aa833838d184",
+      "name": "Default Data Loader8"
     },
     {
       "parameters": {
@@ -447,11 +405,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10144,
-        240
+        16224,
+        880
       ],
-      "id": "c0126e51-bd36-4c9f-97c6-f11a64064c26",
-      "name": "Code in JavaScript6"
+      "id": "fa4657c5-913a-4361-ad84-75035766cf05",
+      "name": "Code in JavaScript8"
     },
     {
       "parameters": {
@@ -474,14 +432,14 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1.1,
       "position": [
-        9504,
-        1824
+        15584,
+        2464
       ],
-      "id": "e2b9dab0-1e3c-492c-922f-01d7023e083d",
-      "name": "Message a model5",
+      "id": "2552c470-6097-42fa-b188-c69d45fe17d7",
+      "name": "Message a model6",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -494,20 +452,20 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook4').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.content.parts[0].text\n    }\n  ]\n}\n}}",
+        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook5').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.content.parts[0].text\n    }\n  ]\n}\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        9840,
-        1824
+        15920,
+        2464
       ],
-      "id": "4ad33eb4-b05d-4437-94a1-67c983c92eb9",
-      "name": "HTTP Request17",
+      "id": "8a4f8f07-b64c-453b-a86c-429e51f19843",
+      "name": "HTTP Request21",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -515,18 +473,18 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Answer the question:\n{{ $('LINE Webhook4').item.json.body.events[0].message.text }}\nIf the question is about past expenses, use the 'Supabase Vecter Search' tool.\nnow : {{ $now }}.\n\nreplyToken: {{ $('LINE Webhook4').item.json.body.events[0].replyToken }}\n\nOutput as:\n{\n  \"reply\": \"xxx\",\n  \"replyToken\": \"xxx\"\n}\n\nPlease reply in Thai.",
+        "text": "=Answer the question:\n{{ $('LINE Webhook5').item.json.body.events[0].message.text }}\nIf the question is about past expenses, use the 'Supabase Vecter Search' tool.\nnow : {{ $now }}.\n\nreplyToken: {{ $('LINE Webhook5').item.json.body.events[0].replyToken }}\n\nOutput as:\n{\n  \"reply\": \"xxx\",\n  \"replyToken\": \"xxx\"\n}\n\nPlease reply in Thai.",
         "hasOutputParser": true,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        9664,
-        1328
+        15744,
+        1968
       ],
-      "id": "1cff2516-522c-4c25-8984-b852e17b4d37",
-      "name": "AI Agent5"
+      "id": "dda5e0cc-e6c2-4ce8-8b46-07d54bba4f74",
+      "name": "AI Agent9"
     },
     {
       "parameters": {
@@ -536,14 +494,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        9552,
-        1552
+        15632,
+        2192
       ],
-      "id": "2d7a70c2-3cc0-4416-a907-abce8d21e32d",
-      "name": "Google Gemini Chat Model11",
+      "id": "40484cc0-656c-4cc7-8f45-373f276a62ce",
+      "name": "Google Gemini Chat Model21",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -555,11 +513,11 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        10096,
-        1552
+        16176,
+        2192
       ],
-      "id": "21bc90ba-e4b0-4435-833e-81535bd2ebed",
-      "name": "Structured Output Parser6"
+      "id": "c81c21ee-a5ce-489b-94d7-16cac091d76d",
+      "name": "Structured Output Parser10"
     },
     {
       "parameters": {
@@ -569,20 +527,20 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook4').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.output.reply\n    }\n  ]\n}\n}}",
+        "jsonBody": "={{\n{\n  \"replyToken\": $('LINE Webhook5').item.json.body.events[0].replyToken,\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": $json.output.reply\n    }\n  ]\n}\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        10096,
-        1328
+        16176,
+        1968
       ],
-      "id": "c0078abe-1e0f-46ab-be87-aa3c8f0d0360",
-      "name": "HTTP Request18",
+      "id": "890cbc37-9429-41e8-a248-bb5594abcdb3",
+      "name": "HTTP Request22",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -603,14 +561,14 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        9792,
-        1552
+        15872,
+        2192
       ],
-      "id": "3eb2ac1d-a3e6-4d50-b14e-17b8bb2989f1",
-      "name": "Supabase Vecter Search4",
+      "id": "1bb6125d-937a-4c66-b0ea-52d2f602bc38",
+      "name": "Supabase Vecter Search5",
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
@@ -623,14 +581,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        9792,
-        464
+        15872,
+        1104
       ],
-      "id": "d8b67e55-3566-42d4-b990-16ef2dd8257e",
-      "name": "Google Gemini Chat Model18",
+      "id": "3cfa421a-7ca2-4a8f-bd84-e97d6dee8d30",
+      "name": "Google Gemini Chat Model22",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -645,11 +603,11 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        8784,
-        624
+        14864,
+        1264
       ],
-      "id": "d76737de-5f6a-4f30-b7b7-6a9117880053",
-      "name": "AI Agent8",
+      "id": "793b68ac-ba48-4341-b390-fb060dd30105",
+      "name": "AI Agent10",
       "alwaysOutputData": false
     },
     {
@@ -660,14 +618,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        8768,
-        864
+        14848,
+        1504
       ],
-      "id": "fb4e3df4-6669-482c-94de-c56bb3df2195",
-      "name": "Google Gemini Chat Model19",
+      "id": "1add56ec-46e5-4a41-bc1c-8137ad0a9b1e",
+      "name": "Google Gemini Chat Model23",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -680,11 +638,11 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        8928,
-        864
+        15008,
+        1504
       ],
-      "id": "8782b299-e18b-4381-ad00-91abb05b037d",
-      "name": "Structured Output Parser9"
+      "id": "3eb47061-7578-472a-a4b5-096005e900a4",
+      "name": "Structured Output Parser11"
     },
     {
       "parameters": {
@@ -713,11 +671,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        9280,
-        864
+        15360,
+        1504
       ],
-      "id": "b06161eb-0f40-4147-bb61-d1af1715bec8",
-      "name": "If15"
+      "id": "2de941a7-58e7-49da-85c3-659f8d69f401",
+      "name": "If19"
     },
     {
       "parameters": {
@@ -755,11 +713,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        9312,
-        1840
+        15392,
+        2480
       ],
-      "id": "1ebe2f9c-a976-4932-bd5b-675ee8b73279",
-      "name": "If16"
+      "id": "33f9825c-b4e4-403b-99ba-feebec726ce2",
+      "name": "If20"
     },
     {
       "parameters": {
@@ -801,11 +759,11 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        9552,
-        848
+        15632,
+        1488
       ],
-      "id": "ade3d4f6-b288-4c2d-83e0-dd34e00f3fee",
-      "name": "Information Extractor7"
+      "id": "337106a3-7a46-48f0-9c80-151ee38422d7",
+      "name": "Information Extractor9"
     },
     {
       "parameters": {
@@ -815,20 +773,20 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook4').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
+        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook5').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        10816,
-        784
+        16896,
+        1424
       ],
-      "id": "03e530da-9f08-4f1f-b419-455f1bf3efee",
-      "name": "HTTP Request19",
+      "id": "3ad9dd60-a57e-428e-8e9b-9e2869b18a78",
+      "name": "HTTP Request23",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -848,15 +806,15 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        10272,
-        768
+        16352,
+        1408
       ],
-      "id": "be43c5a0-1a51-480b-ab51-a5f36198cb6a",
-      "name": "Supabase Vector Store7",
+      "id": "9b674211-501f-4cff-b29c-f021f9a1b781",
+      "name": "Supabase Vector Store9",
       "notesInFlow": true,
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       },
@@ -871,11 +829,11 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        10448,
-        976
+        16528,
+        1616
       ],
-      "id": "d44a9177-d65c-4595-aac8-653b4ea1dc94",
-      "name": "Default Data Loader7"
+      "id": "0a876a69-d3b8-4346-93eb-86e2846f7b8c",
+      "name": "Default Data Loader9"
     },
     {
       "parameters": {
@@ -884,11 +842,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        10064,
-        768
+        16144,
+        1408
       ],
-      "id": "6d8fa090-6b84-4afb-9a98-1e932501149c",
-      "name": "Code in JavaScript7"
+      "id": "14738afe-214b-4a69-942f-ca4651892df6",
+      "name": "Code in JavaScript9"
     },
     {
       "parameters": {
@@ -898,15 +856,15 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        9552,
-        1088
+        15632,
+        1728
       ],
-      "id": "2f36e106-c096-460f-860b-d4c2e6e74c07",
-      "name": "Google Gemini Chat Model20",
+      "id": "61439159-c13e-4b1d-8cfa-c44d4758f115",
+      "name": "Google Gemini Chat Model24",
       "alwaysOutputData": false,
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -928,14 +886,14 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        9536,
-        240
+        15616,
+        880
       ],
-      "id": "a60cbf4d-8ca2-4dfc-9342-a961bb4faaee",
-      "name": "Analyze an image5",
+      "id": "fece67e8-e662-4ac6-a9bf-57fe07510118",
+      "name": "Analyze an image6",
       "credentials": {
         "googlePalmApi": {
-          "id": "REDACTED_GOOGLEPALMAPI_CRED_ID_3",
+          "id": "mzHmkrA7zZeIYfT6",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -943,29 +901,29 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || 'dm' }}_{{ $('LINE Webhook4').item.json.body.events[0].source.userId }}",
+        "sessionKey": "={{ $('LINE Webhook5').item.json.body.events[0].source.groupId || 'dm' }}_{{ $('LINE Webhook5').item.json.body.events[0].source.userId }}",
         "contextWindowLength": 10
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        9680,
-        1552
+        15760,
+        2192
       ],
-      "id": "4c6f6482-267d-407d-9419-5b48fc23cb01",
-      "name": "Simple Memory2"
+      "id": "0ab3773c-e505-480e-a8c3-84b9e5b756f8",
+      "name": "Simple Memory3"
     },
     {
       "parameters": {
         "jsCode": "const event = $json.body.events[0];\nconst source = event.source || {};\nreturn {\n  json: {\n    lineUserId: source.userId || null,\n    groupId: source.groupId || null,\n    roomId: source.roomId || null,\n    chatType: source.type || 'user'\n  }\n};"
       },
-      "id": "043b2c06-4095-4c9c-ba6d-452a8b90cfd6",
-      "name": "Extract User Info2",
+      "id": "17aab6de-babe-4d1f-9fe1-e106bd2909c9",
+      "name": "Extract User Info3",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8208,
-        560
+        14288,
+        1200
       ]
     },
     {
@@ -992,13 +950,13 @@
         },
         "options": {}
       },
-      "id": "3f4fb9c3-27d7-4a35-942a-5f4ca7fa3b41",
-      "name": "Check Group2",
+      "id": "13b6d94f-769d-4c71-a077-a8f06f18a5f3",
+      "name": "Check Group3",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        8384,
-        560
+        14464,
+        1200
       ]
     },
     {
@@ -1008,17 +966,17 @@
         "genericAuthType": "httpHeaderAuth",
         "options": {}
       },
-      "id": "4d7c7fd0-90dc-4c13-8f83-29263bf87853",
-      "name": "Get Group Member Profile2",
+      "id": "cb9847a3-857c-4ae2-a389-37d4b3d033b2",
+      "name": "Get Group Member Profile3",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8560,
-        464
+        14640,
+        1104
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -1030,17 +988,17 @@
         "genericAuthType": "httpHeaderAuth",
         "options": {}
       },
-      "id": "64ad44af-a68a-4eb0-b089-a51b4f704f1d",
-      "name": "Get User Profile2",
+      "id": "997e914c-5292-4e99-9d16-366ae5b43f66",
+      "name": "Get User Profile3",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8560,
-        672
+        14640,
+        1296
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "REDACTED_HTTPHEADERAUTH_CRED_ID_2",
+          "id": "H2N9YHhoZvl5rflC",
           "name": "Header Auth account"
         }
       }
@@ -1052,7 +1010,7 @@
           "fieldValues": [
             {
               "fieldId": "line_user_id",
-              "fieldValue": "={{ $('Extract User Info2').item.json.lineUserId }}"
+              "fieldValue": "={{ $('Extract User Info3').item.json.lineUserId }}"
             },
             {
               "fieldId": "display_name",
@@ -1060,22 +1018,22 @@
             },
             {
               "fieldId": "group_id",
-              "fieldValue": "={{ $('Extract User Info2').item.json.groupId }}"
+              "fieldValue": "={{ $('Extract User Info3').item.json.groupId }}"
             }
           ]
         }
       },
-      "id": "3610176f-efb0-4d3a-a27e-5ccca286cfa0",
-      "name": "Upsert User2",
+      "id": "0b2b73ce-0afd-4a25-a8fe-9ded0b11d47a",
+      "name": "Upsert User3",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        8784,
-        400
+        15328,
+        1200
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       },
@@ -1088,11 +1046,11 @@
           "fieldValues": [
             {
               "fieldId": "line_user_id",
-              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+              "fieldValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.userId }}"
             },
             {
               "fieldId": "group_id",
-              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || null }}"
+              "fieldValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.groupId || null }}"
             },
             {
               "fieldId": "payer_name",
@@ -1117,21 +1075,25 @@
             {
               "fieldId": "transaction_type",
               "fieldValue": "={{ $json.transaction_type }}"
+            },
+            {
+              "fieldId": "reference_code",
+              "fieldValue": "={{ $json.reference_code }}"
             }
           ]
         }
       },
-      "id": "41887367-bd87-48f5-bf38-37a95db5d1ab",
-      "name": "Insert Expense Record (Image)2",
+      "id": "b021097e-eb31-4540-8050-e18a5ebca73d",
+      "name": "Insert Expense Record (Image)3",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        10960,
-        560
+        17040,
+        1200
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
@@ -1143,11 +1105,11 @@
           "fieldValues": [
             {
               "fieldId": "line_user_id",
-              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.userId }}"
+              "fieldValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.userId }}"
             },
             {
               "fieldId": "group_id",
-              "fieldValue": "={{ $('LINE Webhook4').item.json.body.events[0].source.groupId || null }}"
+              "fieldValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.groupId || null }}"
             },
             {
               "fieldId": "payer_name",
@@ -1176,17 +1138,17 @@
           ]
         }
       },
-      "id": "1d400f37-a5f5-41a0-91cb-2c1625092202",
-      "name": "Insert Expense Record (Text)2",
+      "id": "9be26ffb-3055-47d8-8b8e-365a98c8c112",
+      "name": "Insert Expense Record (Text)3",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        10928,
-        1184
+        17008,
+        1824
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
@@ -1197,15 +1159,15 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "7df93276-f780-4ff7-b6a6-ea462305f725",
-      "name": "Dashboard Webhook2",
+      "id": "b0ba0aa1-44f8-4a57-8e11-2e8b9b4a404e",
+      "name": "Dashboard Webhook3",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        8192,
-        1152
+        14368,
+        2016
       ],
-      "webhookId": "REDACTED_WEBHOOK_ID_2"
+      "webhookId": "d3c1b8a2-1111-4b2b-9999-2913a867f5f2"
     },
     {
       "parameters": {
@@ -1214,18 +1176,18 @@
         "returnAll": true,
         "filterType": "none"
       },
-      "id": "60200fa3-0343-4b35-b4a9-d5bef9dee009",
-      "name": "Get Monthly Data2",
+      "id": "198efe1c-a40c-4d23-9e4f-544139ed7e6b",
+      "name": "Get Monthly Data3",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        8368,
-        1152
+        14544,
+        2016
       ],
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "REDACTED_SUPABASEAPI_CRED_ID_1",
+          "id": "Nyh2hOIM6TPtjs5R",
           "name": "Supabase account"
         }
       }
@@ -1245,515 +1207,655 @@
           }
         }
       },
-      "id": "7a55dcea-8cc1-4335-89a0-f9ef8e78dec2",
-      "name": "Respond Dashboard2",
+      "id": "53c78236-af10-428d-8916-d4902bb3a918",
+      "name": "Respond Dashboard3",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        8736,
-        1152
+        14912,
+        2016
       ]
     },
     {
       "parameters": {
-        "jsCode": "const query = $('Dashboard Webhook2').first().json.query || {};\nlet rows = $input.all().map(i => i.json).filter(r => r && r.month);\n\nif (query.line_user_id) {\n  rows = rows.filter(r => r.line_user_id === query.line_user_id);\n} else if (query.group_id) {\n  rows = rows.filter(r => r.group_id === query.group_id);\n}\n\nconst rowsHtml = rows.map(r => `<tr><td>${r.month}</td><td>${r.display_name || r.line_user_id}</td>\n<td style=\"text-align:right;color:#0a7d2c\">${Number(r.income||0).toLocaleString()}</td>\n<td style=\"text-align:right;color:#c0392b\">${Number(r.expense||0).toLocaleString()}</td>\n<td style=\"text-align:right;font-weight:bold\">${Number(r.net||0).toLocaleString()}</td></tr>`).join('');\n\nconst html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\">\n<title>สรุปรายรับ-รายจ่ายรายเดือน</title>\n<style>body{font-family:sans-serif;padding:24px;background:#f7f7f8}\ntable{border-collapse:collapse;width:100%;background:#fff}\nth,td{padding:8px 12px;border-bottom:1px solid #eee}\nth{background:#111;color:#fff;text-align:left}</style></head><body>\n<h2>สรุปรายรับ-รายจ่ายรายเดือน</h2>\n<table><thead><tr><th>เดือน</th><th>ผู้ใช้</th><th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือสุทธิ</th></tr></thead>\n<tbody>${rowsHtml || '<tr><td colspan=5>ไม่มีข้อมูล</td></tr>'}</tbody></table>\n</body></html>`;\n\nreturn { json: { html } };"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "80aac29e-333f-4b7f-945c-2c128a0ef30e",
+              "leftValue": "={{ $('LINE Webhook5').item.json.body.events[0].message.text.trim().toLowerCase() }}",
+              "rightValue": "^(dashboard|สรุปยอด|ดูสรุป|ดูdashboard)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
       },
-      "id": "fecb4fc8-a6f8-4ee7-a6eb-48d82a883dca",
-      "name": "Build Dashboard HTML2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        14800,
+        1008
+      ],
+      "id": "21cd8069-0246-45af-a4ba-1af59e35ec85",
+      "name": "Is Dashboard Command"
+    },
+    {
+      "parameters": {
+        "jsCode": "const SECRET = \"2569xyz\"; // ตั้งเองแล้วใช้ค่าเดียวกันทั้ง 2 จุด\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst userId = $('LINE Webhook5').item.json.body.events[0].source.userId;\nconst token = makeToken(userId, SECRET);\nconst link = `https://regainable-laurinda-unpromising.ngrok-free.dev/webhook-test/expense-dashboard?token=${token}`;\n\nreturn {\n  json: {\n    replyText: `นี่คือลิงก์ dashboard ส่วนตัวของคุณ (เห็นข้อมูลของคุณเท่านั้น):\\n${link}`\n  }\n};"
+      },
+      "id": "098a2723-556c-416b-ab67-1f30ec1ee7f0",
+      "name": "Generate Dashboard Link",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8544,
-        1152
+        15296,
+        992
       ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/reply",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\nJSON.stringify({\n  replyToken: $('LINE Webhook5').item.json.body.events[0].replyToken,\n  messages: [ { type: \"text\", text: $json.replyText } ]\n})\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        15536,
+        1056
+      ],
+      "id": "5bec0508-27a7-4aa7-a7cb-3bb34cd38966",
+      "name": "HTTP Request4",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "H2N9YHhoZvl5rflC",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const SECRET = \"2569xyz\"; // ต้องเหมือนด้านบนเป๊ะ\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst query = $('Dashboard Webhook3').item.json.query || {};\nconst token = query.token;\n\nlet rows = $input.all().map(i => i.json).filter(r => r && r.month);\n\nif (!token) {\n  return { json: { html: '<h2>ไม่พบ token กรุณาพิมพ์ \"dashboard\" คุยกับบอทเพื่อขอลิงก์ใหม่</h2>' } };\n}\n\nrows = rows.filter(r => makeToken(r.line_user_id, SECRET) === token);\n\n// เรียงเดือนล่าสุดไว้บนสุดใน Dropdown\nrows.sort((a, b) => String(b.month).localeCompare(String(a.month)));\n\nif (rows.length === 0) {\n  return { json: { html: '<h2>ไม่มีข้อมูล</h2>' } };\n}\n\nconst displayName = rows[0].display_name || rows[0].line_user_id;\n\nconst optionsHtml = rows.map((r, i) =>\n  `<option value=\"${i}\">${r.month}</option>`\n).join('');\n\nconst monthlyDataJs = rows.map(r => ({\n  month: r.month,\n  income: Number(r.income || 0),\n  expense: Number(r.expense || 0),\n  net: Number(r.net || 0)\n}));\n\nconst html = `<!DOCTYPE html><html><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>สรุปรายรับ-รายจ่ายรายเดือน</title>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js\"></script>\n<style>\nbody{font-family:sans-serif;padding:24px;background:#f7f7f8}\n.card{background:#fff;border-radius:8px;padding:20px;max-width:640px;margin:0 auto 16px;box-shadow:0 1px 4px rgba(0,0,0,0.1)}\nh2{margin-top:0}\nselect{width:100%;padding:10px;font-size:16px;border-radius:6px;border:1px solid #ddd;margin-bottom:16px}\n.summary-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:15px}\n.income{color:#0a7d2c;font-weight:bold}\n.expense{color:#c0392b;font-weight:bold}\n.net{font-weight:bold}\n</style></head><body>\n\n<div class=\"card\">\n  <h2>สรุปรายรับ-รายจ่ายรายเดือน (ส่วนตัว)</h2>\n  <div style=\"color:#666;margin-bottom:12px\">ผู้ใช้: ${displayName}</div>\n  <select id=\"monthSelect\">${optionsHtml}</select>\n  <div class=\"summary-row\"><span>รายรับ</span><span class=\"income\" id=\"incomeVal\"></span></div>\n  <div class=\"summary-row\"><span>รายจ่าย</span><span class=\"expense\" id=\"expenseVal\"></span></div>\n  <div class=\"summary-row\"><span>คงเหลือสุทธิ</span><span class=\"net\" id=\"netVal\"></span></div>\n  <canvas id=\"summaryChart\" height=\"180\"></canvas>\n</div>\n\n<script>\nconst monthlyData = ${JSON.stringify(monthlyDataJs)};\nlet chart;\n\nfunction render(idx) {\n  const d = monthlyData[idx];\n  document.getElementById('incomeVal').textContent = d.income.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('expenseVal').textContent = d.expense.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n  document.getElementById('netVal').textContent = d.net.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';\n\n  if (chart) chart.destroy();\n  chart = new Chart(document.getElementById('summaryChart'), {\n    type: 'bar',\n    data: {\n      labels: ['รายรับ', 'รายจ่าย'],\n      datasets: [{ data: [d.income, d.expense], backgroundColor: ['#0a7d2c', '#c0392b'] }]\n    },\n    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }\n  });\n}\n\ndocument.getElementById('monthSelect').addEventListener('change', (e) => render(e.target.value));\nrender(0);\n</script>\n</body></html>`;\n\nreturn { json: { html } };"
+      },
+      "id": "c10b5c7b-34c9-4c49-a729-66d65371999b",
+      "name": "Build Dashboard HTML5 (Dropdown + Chart)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        14720,
+        2016
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "expenses",
+        "limit": 1,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_user_id",
+              "condition": "eq",
+              "keyValue": "={{ $('LINE Webhook5').item.json.body.events[0].source.userId }}"
+            },
+            {
+              "keyName": "reference_code",
+              "condition": "eq",
+              "keyValue": "={{ $('Information Extractor8').item.json.output.reference_code || $now.toMillis() }}"
+            }
+          ]
+        }
+      },
+      "id": "87400274-7a53-49fb-bec5-6f54c454dce6",
+      "name": "Check Duplicate (Image)1",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        16400,
+        1184
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "supabaseApi": {
+          "id": "Nyh2hOIM6TPtjs5R",
+          "name": "Supabase account"
+        }
+      }
     }
   ],
   "connections": {
-    "Check Duplicate (Image)": {
+    "Build Reply (Image)1": {
       "main": [
         [
           {
-            "node": "Build Reply (Image)",
+            "node": "Is Duplicate? (Image)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Reply (Image)": {
+    "Is Duplicate? (Image)1": {
       "main": [
         [
           {
-            "node": "Is Duplicate? (Image)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Is Duplicate? (Image)": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request16",
+            "node": "HTTP Request20",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "HTTP Request16",
+            "node": "HTTP Request20",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Insert Expense Record (Image)2",
+            "node": "Insert Expense Record (Image)3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check Duplicate (Text)": {
+    "Check Duplicate (Text)1": {
       "main": [
         [
           {
-            "node": "Build Reply (Text)",
+            "node": "Build Reply (Text)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Reply (Text)": {
+    "Build Reply (Text)1": {
       "main": [
         [
           {
-            "node": "Is Duplicate? (Text)",
+            "node": "Is Duplicate? (Text)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Is Duplicate? (Text)": {
+    "Is Duplicate? (Text)1": {
       "main": [
         [
           {
-            "node": "HTTP Request19",
+            "node": "HTTP Request23",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "HTTP Request19",
+            "node": "HTTP Request23",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Insert Expense Record (Text)2",
+            "node": "Insert Expense Record (Text)3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "LINE Webhook4": {
+    "LINE Webhook5": {
       "main": [
         [
           {
-            "node": "If13",
+            "node": "If17",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Extract User Info2",
+            "node": "Extract User Info3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Line File5": {
+    "Get Line File6": {
       "main": [
         [
           {
-            "node": "Analyze an image5",
+            "node": "Analyze an image6",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Information Extractor6": {
+    "Information Extractor8": {
       "main": [
         [
           {
-            "node": "Code in JavaScript6",
+            "node": "Code in JavaScript8",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Check Duplicate (Image)",
+            "node": "Check Duplicate (Image)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If13": {
+    "If17": {
       "main": [
         [
           {
-            "node": "Get Line File5",
+            "node": "Get Line File6",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "AI Agent8",
+            "node": "Is Dashboard Command",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If14": {
+    "If18": {
       "main": [
         [
           {
-            "node": "AI Agent5",
+            "node": "AI Agent9",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Embeddings Google Gemini4": {
+    "Embeddings Google Gemini5": {
       "ai_embedding": [
         [
           {
-            "node": "Supabase Vector Store6",
+            "node": "Supabase Vector Store8",
             "type": "ai_embedding",
             "index": 0
           },
           {
-            "node": "Supabase Vecter Search4",
+            "node": "Supabase Vecter Search5",
             "type": "ai_embedding",
             "index": 0
           },
           {
-            "node": "Supabase Vector Store7",
+            "node": "Supabase Vector Store9",
             "type": "ai_embedding",
             "index": 0
           }
         ]
       ]
     },
-    "Default Data Loader6": {
+    "Default Data Loader8": {
       "ai_document": [
         [
           {
-            "node": "Supabase Vector Store6",
+            "node": "Supabase Vector Store8",
             "type": "ai_document",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript6": {
+    "Code in JavaScript8": {
       "main": [
         [
           {
-            "node": "Supabase Vector Store6",
+            "node": "Supabase Vector Store8",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Message a model5": {
+    "Message a model6": {
       "main": [
         [
           {
-            "node": "HTTP Request17",
+            "node": "HTTP Request21",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "AI Agent5": {
+    "AI Agent9": {
       "main": [
         [
           {
-            "node": "HTTP Request18",
+            "node": "HTTP Request22",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Gemini Chat Model11": {
+    "Google Gemini Chat Model21": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent5",
+            "node": "AI Agent9",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Structured Output Parser6": {
+    "Structured Output Parser10": {
       "ai_outputParser": [
         [
           {
-            "node": "AI Agent5",
+            "node": "AI Agent9",
             "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "Supabase Vecter Search4": {
+    "Supabase Vecter Search5": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent5",
+            "node": "AI Agent9",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Google Gemini Chat Model18": {
+    "Google Gemini Chat Model22": {
       "ai_languageModel": [
         [
           {
-            "node": "Information Extractor6",
+            "node": "Information Extractor8",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "AI Agent8": {
+    "AI Agent10": {
       "main": [
         [
           {
-            "node": "If14",
+            "node": "If18",
             "type": "main",
             "index": 0
           },
           {
-            "node": "If15",
+            "node": "If19",
             "type": "main",
             "index": 0
           },
           {
-            "node": "If16",
+            "node": "If20",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Gemini Chat Model19": {
+    "Google Gemini Chat Model23": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent8",
+            "node": "AI Agent10",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Structured Output Parser9": {
+    "Structured Output Parser11": {
       "ai_outputParser": [
         [
           {
-            "node": "AI Agent8",
+            "node": "AI Agent10",
             "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "If15": {
+    "If19": {
       "main": [
         [
           {
-            "node": "Information Extractor7",
+            "node": "Information Extractor9",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If16": {
+    "If20": {
       "main": [
         [
           {
-            "node": "Message a model5",
+            "node": "Message a model6",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Information Extractor7": {
+    "Information Extractor9": {
       "main": [
         [
           {
-            "node": "Code in JavaScript7",
+            "node": "Code in JavaScript9",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Check Duplicate (Text)",
+            "node": "Check Duplicate (Text)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Default Data Loader7": {
+    "Default Data Loader9": {
       "ai_document": [
         [
           {
-            "node": "Supabase Vector Store7",
+            "node": "Supabase Vector Store9",
             "type": "ai_document",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript7": {
+    "Code in JavaScript9": {
       "main": [
         [
           {
-            "node": "Supabase Vector Store7",
+            "node": "Supabase Vector Store9",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Google Gemini Chat Model20": {
+    "Google Gemini Chat Model24": {
       "ai_languageModel": [
         [
           {
-            "node": "Information Extractor7",
+            "node": "Information Extractor9",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze an image5": {
+    "Analyze an image6": {
       "main": [
         [
           {
-            "node": "Information Extractor6",
+            "node": "Information Extractor8",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Simple Memory2": {
+    "Simple Memory3": {
       "ai_memory": [
         [
           {
-            "node": "AI Agent5",
+            "node": "AI Agent9",
             "type": "ai_memory",
             "index": 0
           }
         ]
       ]
     },
-    "Extract User Info2": {
+    "Extract User Info3": {
       "main": [
         [
           {
-            "node": "Check Group2",
+            "node": "Check Group3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check Group2": {
+    "Check Group3": {
       "main": [
         [
           {
-            "node": "Get Group Member Profile2",
+            "node": "Get Group Member Profile3",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Get User Profile2",
+            "node": "Get User Profile3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Group Member Profile2": {
+    "Get Group Member Profile3": {
       "main": [
         [
           {
-            "node": "Upsert User2",
+            "node": "Upsert User3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get User Profile2": {
+    "Get User Profile3": {
       "main": [
         [
           {
-            "node": "Upsert User2",
+            "node": "Upsert User3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Dashboard Webhook2": {
+    "Dashboard Webhook3": {
       "main": [
         [
           {
-            "node": "Get Monthly Data2",
+            "node": "Get Monthly Data3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Monthly Data2": {
+    "Get Monthly Data3": {
       "main": [
         [
           {
-            "node": "Build Dashboard HTML2",
+            "node": "Build Dashboard HTML5 (Dropdown + Chart)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Dashboard HTML2": {
+    "Is Dashboard Command": {
       "main": [
         [
           {
-            "node": "Respond Dashboard2",
+            "node": "Generate Dashboard Link",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Dashboard Link": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Dashboard HTML5 (Dropdown + Chart)": {
+      "main": [
+        [
+          {
+            "node": "Respond Dashboard3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate (Image)1": {
+      "main": [
+        [
+          {
+            "node": "Build Reply (Image)1",
             "type": "main",
             "index": 0
           }
@@ -1764,6 +1866,6 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "REDACTED_INSTANCE_ID"
+    "instanceId": "030779b12245564a0dd45bae15ed5e1095179015730e1eeee4366ed41dc42a1d"
   }
 }
