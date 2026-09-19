@@ -10,7 +10,7 @@
       "typeVersion": 2,
       "position": [
         16640,
-        1200
+        1216
       ],
       "alwaysOutputData": false
     },
@@ -1164,8 +1164,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        14368,
-        2016
+        14224,
+        528
       ],
       "webhookId": "d3c1b8a2-1111-4b2b-9999-2913a867f5f2"
     },
@@ -1181,8 +1181,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        14544,
-        2016
+        14560,
+        528
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -1212,8 +1212,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        14912,
-        2016
+        15152,
+        576
       ]
     },
     {
@@ -1253,15 +1253,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const SECRET = \"2569xyz\"; // ตั้งเองแล้วใช้ค่าเดียวกันทั้ง 2 จุด\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst userId = $('LINE Webhook5').item.json.body.events[0].source.userId;\nconst token = makeToken(userId, SECRET);\nconst link = `https://regainable-laurinda-unpromising.ngrok-free.dev/webhook-test/expense-dashboard?token=${token}`;\n\nreturn {\n  json: {\n    replyText: `นี่คือลิงก์ dashboard ส่วนตัวของคุณ (เห็นข้อมูลของคุณเท่านั้น):\\n${link}`\n  }\n};"
+        "jsCode": "const SECRET = \"2569xyz\"; // ตั้งเองแล้วใช้ค่าเดียวกันทั้ง 2 จุด\n\nfunction makeToken(id, secret) {\n  const s = id + secret;\n  let hash = 5381;\n  for (let i = 0; i < s.length; i++) {\n    hash = ((hash << 5) + hash + s.charCodeAt(i)) | 0;\n  }\n  return (hash >>> 0).toString(16).padStart(8, '0');\n}\n\nconst userId = $('LINE Webhook5').item.json.body.events[0].source.userId;\nconst token = makeToken(userId, SECRET);\nconst link = `https://regainable-laurinda-unpromising.ngrok-free.dev/webhook/expense-dashboard?token=${token}`;\n\nreturn {\n  json: {\n    replyText: `นี่คือลิงก์ dashboard ส่วนตัวของคุณ (เห็นข้อมูลของคุณเท่านั้น):\\n${link}`\n  }\n};"
       },
       "id": "098a2723-556c-416b-ab67-1f30ec1ee7f0",
       "name": "Generate Dashboard Link",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        15296,
-        992
+        15120,
+        1040
       ]
     },
     {
@@ -1278,7 +1278,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        15536,
+        15488,
         1056
       ],
       "id": "5bec0508-27a7-4aa7-a7cb-3bb34cd38966",
@@ -1299,8 +1299,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        14720,
-        2016
+        14736,
+        528
       ]
     },
     {
@@ -1332,7 +1332,7 @@
         16400,
         1184
       ],
-      "alwaysOutputData": false,
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "Nyh2hOIM6TPtjs5R",
@@ -1512,6 +1512,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Supabase Vector Store8": {
+      "main": [
+        []
       ]
     },
     "Default Data Loader8": {
